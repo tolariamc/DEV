@@ -1,0 +1,51 @@
+on command:
+	if {commande.%player%} is not set:
+		if command is not "hub" or "commande" or "build" or "spec" or "lobby" or "spawn" or "msg" or "r" or "ignore" or "discord" or "twitter" or "instagram" or "boutique" or "site":
+			message "&7➠ &fCommande inconnue... :x"
+			cancel event
+			stop
+
+
+
+command /build:
+	trigger:
+		bungeecord connect player to "SERVERBUILDER"
+
+on packet:
+	if event-string is "PacketPlayInTabComplete":
+		cancel event
+
+
+on right click on hopper:
+	cancel event
+
+on right click on chest:
+	cancel event
+
+on right click on lever:
+	cancel event
+
+on quit:
+	delete {commande.%player%}
+
+
+command /commande [<text>]:
+	trigger:
+		if player is "ByNeoX_" or "Xenore_87":
+			if arg 1 is not set:	
+				message " "
+				message " &7&nAide(s)&0 &8: &6&lCOMMANDE"
+				message " "
+				message " &7• &8/&fcommande &e(on) &8➠ &7Activer les commandes."
+				message " &7• &8/&fcommande &e(off) &8➠ &7Désactiver les commandes."
+				message " "
+				stop
+			if arg 1 is "on":
+				set {commande.%player%} to true
+				message "&7➠&f Vous venez d'activer les commandes."
+			if arg 1 is "off":
+				delete {commande.%player%}
+				message "&7➠&f Vous venez de désactiver les commandes."
+		else:
+			message "&7➠ &fCommande inconnue... :x"
+			stop

@@ -1,0 +1,20 @@
+on load:
+    set mysql host to "localhost"
+    set mysql username to "root"
+    set mysql password to "cBps6ofgFxreYT5N"
+    set mysql database to "playersinfo"
+    connect to mysql
+
+on join:
+	wait 8 ticks
+	$ thread
+	set {_result} to mysql result of query "SELECT * FROM Langage WHERE `name` = '%name of player%'"
+	set {_langue::*} to mysql string "lange" in {_result}
+	if {_langue::1} is set:
+		set {langage.%player%} to {_langue::1}
+	else:
+		if {langage.%player%} is not set:
+			set {langage.%player%} to "FR"
+		$ thread
+		mysql update "INSERT INTO `Langage` (`name`, `lange`) VALUES ('%name of player%', '%{langage.%player%}%')"
+		stop

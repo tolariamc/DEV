@@ -1,0 +1,99 @@
+on load:
+    set mysql host to "localhost"
+    set mysql username to "root"
+    set mysql password to "cBps6ofgFxreYT5N"
+    set mysql database to "playersinfo"
+    connect to mysql
+
+
+on join:
+    wait 1 seconds
+    $ thread
+    set {_result} to mysql result of query "SELECT * FROM BungeeTp WHERE `name` = '%name of player%'"
+    set {_name::*} to mysql string "Checker" in {_result}
+    if {_name::1} is set:
+        wait 1 ticks
+        $ thread
+        mysql update "UPDATE `BungeeTp` SET `Server` = 'MLGLOBBY' WHERE `name` = '%name of player%'"
+    wait 0.5 ticks
+    if {_name::1} is not "<none>" or "null":
+        teleport player to ({_name::1} parsed as player)
+        wait 1 ticks
+        set {checker.%player%} to {_name::1}
+        wait 3 ticks
+        hide player to all players
+        wait 1 ticks
+        delete {checker.%player%}
+        set player's gamemode to creative
+        wait 0.3 seconds
+        $ thread
+        mysql update "UPDATE `BungeeTp` SET `Checker` = 'null' WHERE `name` = '%name of player%'"
+        wait 0.5 seconds
+        set {bar.%player%} to true
+        while player is Online:
+            wait 4 ticks
+            send action bar from "&9Mode &7➠ &fModérateur" to player
+        stop
+    else:
+        if {_name::1} is "null":
+            stop
+        else:
+            $ thread
+            mysql update "INSERT INTO `BungeeTp` (`name`, `Server`, `Checker`) VALUES ('%name of player%', 'MLGLOBBY', 'null')"
+
+
+on quit:
+    delete {bar.%player%}
+    wait 0.2 seconds
+    $ thread
+    set {_result} to mysql result of query "SELECT * FROM BungeeTp WHERE `name` = '%name of player%'"
+    set {_name::*} to mysql string "name" in {_result}
+    wait 1 ticks
+    if {_name::1} is set:
+        wait 4 ticks
+        $ thread
+        mysql update "UPDATE `BungeeTp` SET `Server` = 'déco' WHERE `name` = '%name of player%'"
+    else:
+        stop
+
+command /spec [<text>]:
+	trigger:
+		if arg 1 is set:
+			if arg 1 is not "%player%":
+				message "&7➠ &aRecherche en cours..."
+				wait 1 ticks
+				$ thread
+				set {_result} to mysql result of query "SELECT * FROM BungeeTp WHERE `name` = '%arg 1%'"
+				set {_name::*} to mysql string "Server" in {_result}
+				wait 1 ticks
+				if {_name::1} is not "déco" or "<none>" or "null":
+					wait 1 ticks
+					message "&7➠ &fServeur trouvé: &a%{_name::1}% &7(téléportation)"
+					if {_name::1} is "HUB01":
+						message "&7➠ &cVous ne pouvez pas spec un joueur qui est au HUB."
+						stop
+					if {_name::1} is "MLGLOBBY":
+						delete {check.%player%}
+						set {_d} to "null"
+						hide player to all players
+						wait 1 ticks
+						teleport player to (arg-1 parsed as player)
+					else:	
+						set {check.%player%} to arg 1
+						set {_d} to arg 1
+					wait 0.3 seconds
+					mysql update "UPDATE `BungeeTp` SET `Checker` = '%{_d}%' WHERE `name` = '%name of player%'"
+					if {_name::1} is not "MLGLOBBY":
+						wait 0.5 seconds
+						bungeecord connect player to "%{_name::1}%"
+						stop
+					else:
+						wait 0.5 seconds
+						if {bar.%player%} is not set:
+							set {bar.%player%} to true
+							while player is Online:
+								wait 4 ticks
+								send action bar from "&9Mode &7➠ &fModérateur" to player
+
+				else:
+					message "&7➠ &cLe joueur n'est pas connecté(e)..."

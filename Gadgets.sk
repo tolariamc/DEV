@@ -1,0 +1,27 @@
+on walk on 165:
+	wait 1 ticks
+	push the player upwards at speed 2
+	wait 2 ticks
+	push the player in horizontal direction of player at speed 4
+	play raw sound "random.pop" at player with pitch 1 volume 0.5
+
+on walk on 169:
+	wait 1 ticks
+	push the player upwards at speed 0.5
+	wait 2 ticks
+	push the player in horizontal direction of player at speed 2.5
+	play raw sound "random.pop" at player with pitch 1 volume 0.5
+
+on click on head:
+	if block under event-block is air:
+		chance of 30%:
+			set {_g} to a random integer between 1 and 3
+			if {_g} is 1:
+				message "&7➠ &fJe suis un poisson...."
+			if {_g} is 2:
+				message "&7➠ &fMais où sont Bigorneaux & Coquillages ! "
+			if {_g} is 3:
+				message "&7➠ &fBlouu.. Bull.. Bull"
+			play sound "CHICKEN_EGG_POP" to player with volume 100.0 and pitch 100.0
+			create 1 Villager Happy particles at location of event-block offset by 0.5, 0.5, 0.5
+		stop

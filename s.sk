@@ -1,0 +1,38 @@
+on load:
+    set mysql host to "localhost"
+    set mysql username to "root"
+    set mysql password to "cBps6ofgFxreYT5N"
+    set mysql database to "playersinfo"
+    connect to mysql
+
+command /add <player> <text>:
+	trigger:
+		if arg 2 is "PCGAME" or "ECRANS" or "SOURIS" or "CLAVIE":
+			$ thread
+			set {_result} to mysql result of query "SELECT * FROM Box WHERE `name` = '%name of arg 1%'"
+			set {_name::*} to mysql string "lots" in {_result}
+			add arg 2 to {%arg 1%.lot::*}
+			broadcast "%{%arg 1%.lot::*}%"
+			if {_name::1} is set:
+				wait 1 ticks
+				$ thread
+				mysql update "UPDATE `Box` SET `lots` = '%{%arg 1%.lot::*}%' WHERE `name` = '%name of arg 1%'"
+			else:
+				broadcast "%{%arg 1%.lot::*}%"
+				mysql update "INSERT INTO `Box` (`name`, `lots`) VALUES ('%name of arg 1%', '%{%arg 1%.lot::*}%')"
+
+command /set:
+	trigger:
+		$ thread
+		set {_result} to mysql result of query "SELECT * FROM Box WHERE `name` = '%name of player%'"
+		set {_name::*} to mysql string "lots" in {_result}
+		broadcast "%{%player%.lot::*}%"
+		broadcast "%size of {%player%.lot::*}%"
+		set {_ee} to {_name::1}
+		set {_f} to (size of {%player%.lot::*}-1)
+		loop {_f} times:
+			replace all "and" with "," in {_ee}
+			add first 6 characters of {_ee} to {_lot::*}
+			replace first 8 characters of {_ee} in {_ee} with ""
+		broadcast "%{_lot::*}%"
+		broadcast "%size of {_lot::*}%"

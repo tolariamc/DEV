@@ -1,0 +1,106 @@
+function Detect(p: player, r: text):
+	add 1 to {alertl::%{_p}%}
+	loop all players:
+		loop-player is op:
+			send "&8[&6&l!&8] &bAntiCheat &8» &6%{_p}% &7a été détecté pour: &c%{_r}% &6(%{alertl::%{_p}%}%)'" to loop-player
+			play sound "LEVEL_UP" to loop-player with volume 1 and pitch 2
+on damage:
+	set {cooldown.%victim%} to now
+
+
+on any move:
+	player is not riding
+	set {_diffy} to difference between y location of player and {yloc.%player%}
+	set {yloc.%player%} to y location of player
+	if {_diffy} != 0:
+		if "%{_diffy}%" = "%{lasposy.%player%}%":
+			if "%{_diffy}%" != "0.08":
+				{vl08.%player%} is set
+				clear {vl08.%player%}
+			if "%{_diffy}%" != "0.16":
+				{vl16.%player%} is set
+				clear {vl16.%player%}
+			if "%{_diffy}%" != "0.42":
+				{vl42.%player%} is set
+				clear {vl42.%player%}
+			
+			if "%{_diffy}%" != "0.23":
+				{vl23.%player%} is set
+				clear {vl23.%player%}
+			if "%{_diffy}%" != "0.65":
+				{vl65.%player%} is set
+				clear {vl65.%player%}
+			if "%{_diffy}%" != "0.12":
+				{vl12.%player%} is set
+				clear {vl12.%player%}
+			if "%{_diffy}%" != "0.4":
+				{vl04.%player%} is set
+				clear {vl04.%player%}
+			player's gamemode is not creative
+			if block at player is ladder or vines:
+				stop
+			loop blocks in radius 3 around player:
+				loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab or 165
+				clear {vlsame.%player%}
+				stop
+			wait 3 ticks
+			if {cooldown.%player%} is set:
+				difference between {cooldown.%player%} and now < 0.3 seconds
+				clear {vlsame.%player%}
+				stop
+			if "%{_diffy}%" = "0.08":
+				
+				add 1 to {vl08.%player%}
+				{vl08.%player%} > 12
+				Detect(player, "Fly V1 &e%{_diffy}%")
+			if "%{_diffy}%" = "0.16":
+				
+				add 1 to {vl16.%player%}
+				{vl16.%player%} > 2
+				Detect(player, "Fly V1 &e%{_diffy}%")
+			if "%{_diffy}%" = "0.42":
+				
+				add 1 to {vl42.%player%}
+				{vl42.%player%} > 2
+				Detect(player, "Fly V1 &e%{_diffy}%")
+			if "%{_diffy}%" = "0.23":
+				
+				add 1 to {vl23.%player%}
+				{vl23.%player%} > 2
+				Detect(player, "Fly V1 &a %{_diffy}%")
+			if "%{_diffy}%" = "0.12":
+				set {_pos} to block 1 north 1 west of block 2 above player
+				set {_pos2} to block 1 south 1 east of block above player
+				loop blocks within {_pos} to {_pos2}:
+					loop-block is not air
+					set {lasypos.%player%} to {_diffy}
+					stop
+				add 1 to {vl12.%player%}
+				{vl12.%player%} > 2
+				Detect(player, "Fly v1 &d 0.12")
+			if "%{_diffy}%" = "0.4":
+				set {_pos} to block 1 north 1 west of block 2 above player
+				set {_pos2} to block 1 south 1 east of block above player
+				loop blocks within {_pos} to {_pos2}:
+					loop-block is not air
+					stop
+				add 1 to {vl04.%player%}
+				{vl04.%player%} > 2
+				Detect(player, "Fly v1 &d 0.4")
+			if "%{_diffy}%" = "0.65":
+				
+				add 1 to {vl65.%player%}
+				{vl65.%player%} > 2
+				Detect(player, "Fly V1 &1 %{_diffy}%")
+			if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.08" or "0.16" or "0.4":
+				stop
+			add 1 to {vlsame.%player%}
+			if {_diffy} >= 0.8:
+				set {_maxvl} to 1
+			else:
+				set {_maxvl} to 3
+			{vlsame.%player%} > {_maxvl}
+			Detect(player, "Fly v1 &a%{_diffy}%")
+		else:
+			set {lasposy.%player%} to {_diffy}
+			clear {vlsame.%player%}

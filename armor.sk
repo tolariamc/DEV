@@ -1,0 +1,40 @@
+command /fix:
+	trigger:
+		loop all entities:
+			if loop-entity is an armor stand:
+				add "{DisabledSlots:2039583}" to nbt of loop-entity
+
+
+on inventory open:
+	wait 2 ticks
+	if inventory name of current inventory of player is "[Serveurs] » MLG":
+		wait 0.3 ticks
+		set {_v::*} to 27,28,29,30,31,32,33,34 and 35
+		loop {_v::*}:
+			set slot loop-value of player's current inventory to 1 160:4 named " "
+		if "%{langage.%player%}%" is "FR":
+			set slot 10 of player's current inventory to 1 player head with custom nbt "{display:{Name:""Globe""},SkullOwner:{Id:""bd287f02-7b3b-ffd9-c56c-99cb0fafab3b"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOThkYWExZTNlZDk0ZmYzZTMzZTFkNGM2ZTQzZjAyNGM0N2Q3OGE1N2JhNGQzOGU3NWU3YzkyNjQxMDYifX19""}]}}}" named "&bPARTIE RAPIDE" with lore "&8Type: Aléatoire||||&8• &fEn jeu: &e0 &fjoueur(s).||||&7➥ &aClique pour y accéder!"
+			set slot 16 of player's current inventory to 1 player head with custom nbt "{display:{Name:""Oak Wood Reverse Exclamation Mark""},SkullOwner:{Id:""c4048c14-9b37-4679-9c68-1ee0250a1c97"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMyNzAwOWNkNDcxODg0MTE1MjAzODYwYzFkYWY2ZDgyNWMwODQ1ZjhhNTI4YzZlZjZiZDI0ZWI4NmI0YjM4YiJ9fX0=""}]}}}" named "&eINFORMATION" with lore "&8Type: description||||&7Votre seau d'eau à la main...||&7Seul contre tous, c'est le moment,||&7de montrer... votre skill en MLG !||||&eTactique / Précision"
+		if "%{langage.%player%}%" is "ES":
+			set slot 10 of player's current inventory to 1 player head with custom nbt "{display:{Name:""Globe""},SkullOwner:{Id:""bd287f02-7b3b-ffd9-c56c-99cb0fafab3b"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOThkYWExZTNlZDk0ZmYzZTMzZTFkNGM2ZTQzZjAyNGM0N2Q3OGE1N2JhNGQzOGU3NWU3YzkyNjQxMDYifX19""}]}}}" named "&bPartida Rápida" with lore "&8Tipo: Aleatorio||||&8• &fEn juego: &e0 &fjugador(s).||||&7➥ &aHaga clic para acceder!"
+			set slot 16 of player's current inventory to 1 player head with custom nbt "{display:{Name:""Oak Wood Reverse Exclamation Mark""},SkullOwner:{Id:""c4048c14-9b37-4679-9c68-1ee0250a1c97"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMyNzAwOWNkNDcxODg0MTE1MjAzODYwYzFkYWY2ZDgyNWMwODQ1ZjhhNTI4YzZlZjZiZDI0ZWI4NmI0YjM4YiJ9fX0=""}]}}}" named "&eINFORMATIÓN" with lore "&8Tipo: descripción||||&7Su balde con agua...||&7solo contra todos, es un buen momento,||&7de demostrar gratitud... los centros de MLG !||||&eTáctica / Precisión"
+		if "%{langage.%player%}%" is "EN":
+			set slot 10 of player's current inventory to 1 player head with custom nbt "{display:{Name:""Globe""},SkullOwner:{Id:""bd287f02-7b3b-ffd9-c56c-99cb0fafab3b"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOThkYWExZTNlZDk0ZmYzZTMzZTFkNGM2ZTQzZjAyNGM0N2Q3OGE1N2JhNGQzOGU3NWU3YzkyNjQxMDYifX19""}]}}}" named "&bQuick game" with lore "&8Type: Random||||&8• &fIn game: &e0 &fplayer(s).||||&7➥ &aClick for access!"
+			set slot 16 of player's current inventory to 1 player head with custom nbt "{display:{Name:""Oak Wood Reverse Exclamation Mark""},SkullOwner:{Id:""c4048c14-9b37-4679-9c68-1ee0250a1c97"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMyNzAwOWNkNDcxODg0MTE1MjAzODYwYzFkYWY2ZDgyNWMwODQ1ZjhhNTI4YzZlZjZiZDI0ZWI4NmI0YjM4YiJ9fX0=""}]}}}" named "&eINFORMATION" with lore "&8Type: description||||&7Your bucket of water in your hand...||&7Alone against all, it's the moment,||&7to show ... your skill in MLG !||||&eTactical / Precision"
+on inventory click:
+	if inventory name of current inventory of player is "[Serveurs] » MLG":
+		cancel event
+		wait 1 ticks
+		if clicked item is a player head:
+			if clicked slot is 10:
+				wait 0.2 seconds
+				close player's inventory
+				bungeecord connect player to "MLG01"
+				stop
+		if clicked item is a empty map:
+			if clicked slot is 13:
+				wait 0.2 seconds
+				close player's inventory
+				bungeecord connect player to "MLG01"
+				stop
+

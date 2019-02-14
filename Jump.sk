@@ -1,0 +1,432 @@
+function title(t: text, in: number, stay: number, out: number, p: player):
+    set {_t} to coloured {_t}
+    set {_in} to {_in} * 20
+    set {_stay} to {_stay} * 20
+    set {_out} to {_out} * 20
+    console command "/title %{_p}% times %{_in}% %{_stay}% %{_out}%"
+    console command "/title %{_p}% title {""text"":""%{_t}%""}"
+function subtitle(t: text, in: number, stay: number, out: number, p: player):
+    set {_t} to coloured {_t}
+    set {_in} to {_in} * 20
+    set {_stay} to {_stay} * 20
+    set {_out} to {_out} * 20
+    console command "/title %{_p}% times %{_in}% %{_stay}% %{_out}%"
+    console command "/title %{_p}% subtitle {""text"":""%{_t}%""}"
+function simpleTitle(t: text, in: number, stay: number, out: number, p: player):
+    set {_t} to coloured {_t}
+    set {_in} to {_in} * 20
+    set {_stay} to {_stay} * 20
+    set {_out} to {_out} * 20
+    set {_titles::*} to {_t} split at "||"
+    console command "/title %{_p}% times %{_in}% %{_stay}% %{_out}%"
+    console command "/title %{_p}% title {""text"":""%{_titles::1}%""}"
+    console command "/title %{_p}% subtitle {""text"":""%{_titles::2}%""}"
+
+
+function Classement(t: text):
+	loop {jump::*}:
+		set {_list::%loop-value%} to loop-value
+		set {_list::%loop-value%::m} to {classement.m.%loop-value%}
+		set {_list::%loop-value%::s} to {classement.s.%loop-value%}	
+	loop {jump::*}:
+		set {_time-m} to 10000000
+		loop {_list::*}:
+			if {_list::%loop-value-2%::m} < {_time-m}:
+				set {_time-m} to {_list::%loop-value-2%::m}
+				set {_time-s} to {_list::%loop-value-2%::s}
+				set {_max} to loop-value-2
+			else if {_list::%loop-value-2%::m} = {_time-m}:
+				if {_list::%loop-value-2%::s} < {_time-s}:
+					set {_time-m} to {_list::%loop-value-2%::m}
+					set {_time-s} to {_list::%loop-value-2%::s}
+					set {_max} to loop-value-2
+		clear {_list::%{_max}%}
+		add {_max} to {_top::*}
+	loop 7 times:
+		make console execute command "/holo removeline classement2 3"
+	set {_value} to 0
+	loop {_top::*}:
+		if {_value} < 5:
+			add 1 to {_value}
+			set {_time} to "%{_list::%loop-value%::m}%:%{_list::%loop-value%::s}%"
+			if "%loop-index%" is "1":
+				make console execute command "/holo addline classement2 &4%loop-index% &7• &b%loop-value% &7(Temps: &e%{_time}%&7)"
+			if "%loop-index%" is "2":
+				make console execute command "/holo addline classement2 &c%loop-index% &7• &b%loop-value% &7(Temps: &e%{_time}%&7)"
+			if "%loop-index%" is "3":
+				make console execute command "/holo addline classement2 &6%loop-index% &7• &b%loop-value% &7(Temps: &e%{_time}%&7)"
+			if "%loop-index%" is not "1", "2" or "3":
+				make console execute command "/holo addline classement2 &e%loop-index% &7• &b%loop-value% &7(Temps: &e%{_time}%&7)"
+	if {_value} <= 5:
+		set {_value} to (5 - {_value})
+	set {_u} to (5 - {_value})
+	loop {_value} times:
+		add 1 to {_u}
+		make console execute command "/holo addline classement2 &8%{_u}% &7• &bPlace libre &7(Temps: &e00.00&7)"
+	make console execute command "/holo addline classement2 &0"
+	make console execute command "/holo addline classement2 &7[Reset tous les mois]"
+
+
+command /setdebut:
+	trigger:
+		set {jump} to location of player
+
+
+command /er:
+	trigger:
+		simpleTitle("&a♛ ♚ ♜||&a♛ ♚ ♜", 0.2, 2.5, 0.2, player)
+		message "m: &a♛ ♚ ♜"
+
+
+command /set4:
+	trigger:
+		set {checkpoint4} to location of player
+
+
+command /set2:
+	trigger:
+		set {checkpoint2} to location of player
+
+command /set3:
+	trigger:
+		set {checkpoint3} to location of player
+
+function JumpFin(p: player):
+	delete {k.%{_p}%.jump}
+	delete {jump.%{_p}%}
+	teleport {_p} to {hub}
+	wait 3 ticks
+	delete {chekpoint.%{_p}%}
+	delete {jump.vie.%{_p}%}
+	clear {_p}'s inventory
+	delete {time.%{_p}%}
+	delete {nbr.jump.vie.%{_p}%}
+	delete {minutes.time.%{_p}%}
+	delete {secondes.time.%{_p}%}
+	wait 1 ticks
+	clear {_p}'s inventory
+	if {_p} is online:
+		wait 1 ticks
+		if "%{langage.%{_p}%}%" is "ES":
+			set slot 0 of {_p} to 1 compass named "&bMenú principal &8• &7(Haga-clic)"
+			set slot 1 of {_p} to 425:11 with custom nbt "{BlockEntityTag:{Patterns:[{Color:1,Pattern:""bs""},{Color:1,Pattern:""ts""}]}}" named "&aCambiar idioma &8• &7(Haga-clic)"
+			set slot 8 of {_p} to 1 player head with custom nbt "{display:{Name:""Money Bag""},SkullOwner:{Id:""1d2bf3fe-1b67-495f-995d-435693e90fa0"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmY3NWQxYjc4NWQxOGQ0N2IzZWE4ZjBhN2UwZmQ0YTFmYWU5ZTdkMzIzY2YzYjEzOGM4Yzc4Y2ZlMjRlZTU5In19fQ==""}]}}}" named "&etienda &8• &7(Haga-clic)"
+		if "%{langage.%{_p}%}%" is "EN":
+			set slot 0 of {_p} to 1 compass named "&bMain menu &8• &7(Right-click)"
+			set slot 1 of {_p} to 425:4 with custom nbt "{BlockEntityTag:{Patterns:[{Color:15,Pattern:""drs""},{Color:15,Pattern:""dls""},{Color:15,Pattern:""cs""},{Color:1,Pattern:""sc""},{Color:1,Pattern:""cr""}]}}" named "&aChange language &8• &7(Right-click)"
+			set slot 8 of {_p} to 1 player head with custom nbt "{display:{Name:""Money Bag""},SkullOwner:{Id:""1d2bf3fe-1b67-495f-995d-435693e90fa0"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmY3NWQxYjc4NWQxOGQ0N2IzZWE4ZjBhN2UwZmQ0YTFmYWU5ZTdkMzIzY2YzYjEzOGM4Yzc4Y2ZlMjRlZTU5In19fQ==""}]}}}" named "&eShop &8• &7(Right-click)"
+		if "%{langage.%{_p}%}%" is "FR":
+			set slot 0 of {_p} to 1 compass named "&bMenu principal &8• &7(Clic-droit)"
+			set slot 1 of {_p} to 425:15 with custom nbt "{BlockEntityTag:{Patterns:[{Color:1,Pattern:""rs""},{Color:4,Pattern:""ls""},{Color:4,Pattern:""ls""},{Color:1,Pattern:""rs""}]}}" named "&aChanger de langue &8• &7(Clic-droit)"
+			set slot 8 of {_p} to 1 player head with custom nbt "{display:{Name:""Money Bag""},SkullOwner:{Id:""1d2bf3fe-1b67-495f-995d-435693e90fa0"",Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmY3NWQxYjc4NWQxOGQ0N2IzZWE4ZjBhN2UwZmQ0YTFmYWU5ZTdkMzIzY2YzYjEzOGM4Yzc4Y2ZlMjRlZTU5In19fQ==""}]}}}" named "&eBoutique &8• &7(Clic-droit)"
+		wait 4 ticks
+		if {_p} is Online:
+			wait 1 ticks
+			loop 4 times:
+				wait 1.5 ticks
+				if {langage.%{_p}%} is "FR":
+					send action bar from "&4⚠ &cFIN DU JUMP! &4⚠" to {_p}
+				else if {langage.%{_p}%} is "EN":
+					send action bar from "&4⚠ &cEND OF THE JUMP! &4⚠" to {_p}
+				else if {langage.%{_p}%} is "ES":
+					send action bar from "&4⚠ &cFIN DEL JUMP! &4⚠" to {_p}
+			if {grade.%{_p}%} is not "Joueur":
+				set {_p}'s fly mode to true
+		else:
+			stop
+	else:
+		stop
+
+function Jumpcheck(p: player):
+	if {k.%{_p}%.jump} is not set:
+		if {nbr.jump.vie.%{_p}%} = 3:
+			set {jump.vie.%{_p}%} to "&c❤❤&7❤"
+		if {nbr.jump.vie.%{_p}%} = 2:
+			set {jump.vie.%{_p}%} to "&c❤&7❤❤"
+		if {nbr.jump.vie.%{_p}%} = 1:
+			JumpFin({_p})
+			stop
+		remove 1 from {nbr.jump.vie.%{_p}%}
+
+
+command /resetJumpClassement:
+	trigger:
+		if {grade.%UUID of player%} is "Admin":
+			broadcast "%{jump::*}%"
+			loop {jump::*}:
+				delete {minutes.times.%loop-value%}
+				delete {secondes.times.%loop-value%}
+				delete {classement.m.%loop-value%}
+				delete {classement.s.%loop-value%}
+				loop 10 times:
+					delete {minutes.times.%loop-value-1%}
+					delete {secondes.times.%loop-value-1%}
+					delete {classement.m.%loop-value-1%}
+					delete {classement.s.%loop-value-1%}
+					make console execute command "/holo removeline classement2 5"
+				delete {jump::*}
+
+on drop:
+	cancel event
+
+on pressure plate:
+	if {chekpoint.%player%} is not set:
+		if {jump.%player%} is not set:
+			if event-block is a golden pressure plate:
+				if altitude of event-block is less than 100:
+					if {nick.%player%} is set:
+						make player execute command "/unnick"
+						delete {nick.%player%}
+					delete {particules.%UUID of player%}
+					delete {nuage.%player%}
+					set player's flight state to false
+					set {jump.%player%} to true
+					add 1 to {chekpoint.%player%}
+					set {jump.vie.%player%} to "&c❤❤❤"
+					set {nbr.jump.vie.%player%} to 3
+					clear player's inventory
+					wait 2 ticks
+					if {langage.%player%} is "FR":
+						set slot 8 of player to 1 bed named "&cRetourner au HUB &8• &7(Clic-droit)"
+					else if {langage.%player%} is "EN":
+						set slot 8 of player to 1 bed named "&cBack to Lobby &8• &7(Right-click)"
+					else if {langage.%player%} is "ES":
+						set slot 8 of player to 1 bed named "&cVolver al lobby &8• &7(Haga-clic)"
+					set {secondes.time.%player%} to 0
+					set {minutes.time.%player%} to 0
+					set {time.%player%} to now
+					if {langage.%player%} is "FR":
+						simpleTitle("&e⚡ &aDépart &e⚡||&f&oC'est parti!", 0.2, 2.5, 0.2, player)
+					else if {langage.%player%} is "EN":
+						simpleTitle("&e⚡ &aDeparture &e⚡||&f&oLet's go!", 0.2, 2.5, 0.2, player)
+					else if {langage.%player%} is "ES":
+						simpleTitle("&e⚡ &aSalida &e⚡||&f&oAllá vamos!", 0.2, 2.5, 0.2, player)
+					wait 2 ticks
+					while {jump.%player%} is true:
+						wait 3 ticks
+						if {jump.%player%} is true:
+							if {secondes.time.%player%} is less than 10:
+								if {minutes.time.%player%} is less than 10:
+									send action bar from "&f0%{minutes.time.%player%}%:0%{secondes.time.%player%}% &8• &4Vie(s) &7▎&c %{jump.vie.%player%}%" to player
+							else:
+								if {minutes.time.%player%} is less than 10:
+									send action bar from "&f0%{minutes.time.%player%}%:%{secondes.time.%player%}% &8• &4Vie(s) &7▎&c %{jump.vie.%player%}%" to player
+								else:
+									send action bar from "&f%{minutes.time.%player%}%:0%{secondes.time.%player%}% &8• &4Vie(s) &7▎&c %{jump.vie.%player%}%" to player
+						else:
+							while {_n} != 50:
+								wait 1 ticks
+								if {langage.%player%} is "FR":
+									send action bar from "&4⚠ &cFIN DU JUMP! &4⚠" to player
+								else if {langage.%player%} is "EN":
+									send action bar from "&4⚠ &cEND OF THE JUMP! &4⚠" to player
+								else if {langage.%player%} is "ES":
+									send action bar from "&4⚠ &cFIN DEL JUMP! &4⚠" to player
+							add 1 to {_n}
+	else:		
+		if {chekpoint.%player%} = 1:
+			set {_chek} to 2
+			set {_lo} to "①"
+		if {chekpoint.%player%} = 2:
+			set {_chek} to 3
+			set {_lo} to "②"
+		if {chekpoint.%player%} = 3:
+			set {_chek} to 4
+			set {_lo} to "③"
+		if {chekpoint.%player%} = 4:
+			set {_chek} to 5
+			set {_lo} to "④"
+		if {chekpoint.%player%} = 5:
+			set {_chek} to 6
+			set {_lo} to "⑤"
+		if {chekpoint.%player%} = 6:
+			set {_chek} to 7
+		if {_chek} is not set:
+			if altitude of event-block is 116.5:
+				set {_chek} to 7
+		if distance between player and {checkpoint%{_chek}%} is less than 3:
+			if altitude of event-block is 116.5:
+				add 1 to {chekpoint.%player%}
+				if {chekpoint.%player%} = 7:
+					delete {jump.%player%} 
+					simpleTitle("&c★ FIN ★||&f%{minutes.time.%player%}%:%{secondes.time.%player%}%", 0.2, 3, 0.2, player)
+					if "%{jump::*}%" does not contain "%player%":
+						add player to {jump::*}
+					if {classement.m.%player%} is not set:
+						set {classement.m.%player%} to {minutes.time.%player%}
+						set {classement.s.%player%} to {secondes.time.%player%}
+					if {minutes.time.%player%} is less than {classement.m.%player%}:
+						set {classement.m.%player%} to {minutes.time.%player%}
+						set {classement.s.%player%} to {secondes.time.%player%}
+					else if {minutes.time.%player%} = {classement.m.%player%}:
+						if {secondes.time.%player%} is less than {classement.s.%player%}:
+							set {classement.m.%player%} to {minutes.time.%player%}
+							set {classement.s.%player%} to {secondes.time.%player%}
+					Classement("ntm")
+					wait 2 ticks
+					set {grade.%player%} to {grade.%uuid of player%}
+					JumpFin(player)
+					while {_n} != 15:
+						wait 3 ticks
+						if {langage.%player%} is "FR":
+							send action bar from "&4⚠ &cFIN DU JUMP! &4⚠" to player
+						else if {langage.%player%} is "EN":
+							send action bar from "&4⚠ &cEND OF THE JUMP! &4⚠" to player
+						else if {langage.%player%} is "ES":
+							send action bar from "&4⚠ &cFIN DEL JUMP! &4⚠" to player
+						add 1 to {_n}
+					if {langage.%player%} is "FR":
+						send action bar from "&4⚠ &cFIN DU JUMP! &4⚠" to player
+					else if {langage.%player%} is "EN":
+						send action bar from "&4⚠ &cEND OF THE JUMP! &4⚠" to player
+					else if {langage.%player%} is "ES":
+						send action bar from "&4⚠ &cFIN DEL JUMP! &4⚠" to player
+					set player's gamemode to adventure
+					delete {chekpoint.%player%}
+					stop
+			if altitude of event-block is less than 160:
+				if {chekpoint.%player%} < 7:
+					if altitude of event-block is less than 130:
+						if altitude of event-block is greater than 74:
+							simpleTitle("&e⚓ &aCheckpoint &e⚓||&f(%{chekpoint.%player%}%/5)", 0.2, 2.5, 0.2, player)
+							add 1 to {chekpoint.%player%}
+
+on quit:
+	if {jump.%player%} is set:
+		wait 3 ticks
+		JumpFin(player)
+on any move:
+	wait 2 ticks
+	if {jump.%player%} is set:
+		wait 1 ticks
+		set {_loc} to location of player
+		remove 0.5 from y-coordinate of {_loc}
+		wait 0.01 ticks
+		if {k.%player%.jump} is not set:
+			if block at {_loc} is not a 5:5 or a 166 or a stone button or a gold block or a 95:15 or a 171:15 or a 171:7 or a gray stained glass block or a light gray stained glass block or a quartz stairs or a red wool or a 171:14 or a 171 or a 165 or a quartz block or a red stained clay block or a 134 or a white stained glass block or a 169 or a 5:1 or a stone or a golden pressure plate or a iron pressure plate or a air:
+				if {chekpoint.%player%} = 1:
+					Jumpcheck(player)
+					set {k.%player%.jump} to true
+					if {jump.%player%} is set:
+						teleport player to {jump}
+						wait 5 ticks
+						delete {k.%player%.jump}
+				wait 0.05 ticks
+				if {chekpoint.%player%} = 2:
+					Jumpcheck(player)
+					set {k.%player%.jump} to true
+					if {jump.%player%} is set:
+						teleport player to {checkpoint2}
+						wait 5 ticks
+						delete {k.%player%.jump}
+				wait 0.05 ticks
+				if {chekpoint.%player%} = 3:
+					Jumpcheck(player)
+					set {k.%player%.jump} to true
+					if {jump.%player%} is set:
+						teleport player to {checkpoint3}
+						wait 5 ticks
+						delete {k.%player%.jump}
+				if {chekpoint.%player%} = 4:
+					Jumpcheck(player)
+					set {k.%player%.jump} to true
+					if {jump.%player%} is set:
+						teleport player to {checkpoint4}
+						wait 5 ticks
+						delete {k.%player%.jump}
+				wait 0.05 ticks
+				if {chekpoint.%player%} = 5:
+					Jumpcheck(player)
+					set {k.%player%.jump} to true
+					if {jump.%player%} is set:
+						teleport player to {checkpoint5}
+						wait 5 ticks
+						delete {k.%player%.jump}
+				wait 0.05 ticks
+				if {chekpoint.%player%} = 6:
+					Jumpcheck(player)
+					set {k.%player%.jump} to true
+					if {jump.%player%} is set:
+						teleport player to {checkpoint6}
+						wait 5 ticks
+						delete {k.%player%.jump}
+		wait 0.05 ticks
+		if {chekpoint.%player%} = 1:
+			if altitude of player is less than 74:
+				Jumpcheck(player)
+				if {jump.%player%} is set:
+					teleport player to {jump}
+		wait 0.05 ticks
+		if {chekpoint.%player%} = 2:
+			if altitude of player is less than 80:
+				Jumpcheck(player)
+				if {jump.%player%} is set:
+					teleport player to {checkpoint2}
+		wait 0.05 ticks
+		if {chekpoint.%player%} = 3:
+			if altitude of player is less than 87:
+				Jumpcheck(player)
+				if {jump.%player%} is set:
+					teleport player to {checkpoint3}
+		wait 0.05 ticks
+		if {chekpoint.%player%} = 4:
+			if altitude of player is less than 97:
+				Jumpcheck(player)
+				if {jump.%player%} is set:
+					teleport player to {checkpoint4}
+		wait 0.05 ticks
+		if {chekpoint.%player%} = 5:
+			if altitude of player is less than 107:
+				Jumpcheck(player)
+				if {jump.%player%} is set:
+					teleport player to {checkpoint5}
+		wait 0.05 ticks
+		if {chekpoint.%player%} = 6:
+			if altitude of player is less than 110:
+				Jumpcheck(player)
+				if {jump.%player%} is set:
+					teleport player to {checkpoint6}
+		wait 1 ticks
+		delete {k.%player%.jump}
+		wait 2 ticks
+
+
+command /set5:
+	trigger:
+		set {checkpoint5} to location of player
+
+
+command /set6:
+	trigger:
+		set {checkpoint6} to location of player
+
+command /setfin2:
+	trigger:
+		set {checkpoint7} to location of player
+
+command /set7:
+	trigger:
+		set {checkpoint6} to location of player
+
+every 1 seconds:
+	loop all players:
+		if {jump.%loop-player%} is true:
+			if {secondes.time.%loop-player%} != 59:
+				add 1 to {secondes.time.%loop-player%}
+			else:
+				set {secondes.time.%loop-player%} to 0
+				add 1 to {minutes.time.%loop-player%}
+
+command /ffd:
+	trigger:
+		loop all players:
+			JumpFin(loop-player)
+
+on command:
+	if command is not "/jumpreset":
+		if player is not "ByNeoX_":
+			if {jump.%player%} is true:
+				cancel event
+
+on click with bed:
+	JumpFin(player)
